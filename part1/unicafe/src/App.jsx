@@ -13,6 +13,11 @@ const Button = ({ onClick, text}) => {
 }
 
 const Statistics = ({ values }) => {
+  if (values.total === 0) {
+    return (
+      <div>No feedback given</div>
+    )
+  }
   return (
     <div>
       <StatElement text='good' value={values.good}/>
@@ -49,10 +54,8 @@ const App = () => {
   }
 
   const total = good + neutral + bad
-
-  const average = total === 0 ? 0 : (good * 1 + bad * -1) / total
-
-  const percentPositive = total === 0 ? 0 : good / total
+  const average = (good * 1 + bad * -1) / total
+  const percentPositive = (good / total) * 100
 
   return (
     <div>
