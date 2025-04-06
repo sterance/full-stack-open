@@ -12,7 +12,20 @@ const Button = ({ onClick, text}) => {
   )
 }
 
-const Statistics = ({ text, value }) => {
+const Statistics = ({ values }) => {
+  return (
+    <div>
+      <StatElement text='good' value={values.good}/>
+      <StatElement text='neutral' value={values.neutral}/>
+      <StatElement text='bad' value={values.bad}/>
+      <StatElement text='all' value={values.total}/>
+      <StatElement text='average' value={values.average}/>
+      <StatElement text='positive' value={values.percentPositive + ' %'}/>
+    </div>
+  )
+}
+
+const StatElement = ({ text, value }) => {
   return (
     <p>{text} {value}</p>
   )
@@ -48,12 +61,7 @@ const App = () => {
       <Button onClick={incrementNeutral} text='neutral'/>
       <Button onClick={incrementBad} text='bad'/>
       <Heading text='statistics'/>
-      <Statistics text='good' value={good}/>
-      <Statistics text='neutral' value={neutral}/>
-      <Statistics text='bad' value={bad}/>
-      <Statistics text='all' value={total}/>
-      <Statistics text='average' value={average}/>
-      <Statistics text='positive' value={percentPositive + ' %'}/>
+      <Statistics values={{ good, neutral, bad, total, average, percentPositive }}/>
     </div>
   )
 }
