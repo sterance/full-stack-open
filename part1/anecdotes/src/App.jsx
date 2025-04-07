@@ -1,10 +1,16 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-const Button = ({ onClick, text}) => <button onClick={onClick}>{text}</button>
+const Button = ({ onClick, text}) => <button onClick={onClick}>{text}</button>;
 
-const Anecdote = ({ value }) => <p>{value}</p>
+const Anecdote = ({ text, votes }) => (
+  <div>
+    <p>{text}</p>
+    <p>has {votes} votes</p>
+  </div>
+);
 
 const App = () => {
+
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -15,8 +21,11 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+  
   const [selected, setSelected] = useState(0)
+
+  const initialVotes = Array(anecdotes.length).fill(0);
+  const [votes, setVotes] = useState(initialVotes);
 
   const getRandom = () => {
     let newIndex;
@@ -26,9 +35,16 @@ const App = () => {
     setSelected(newIndex);
   }
 
+  const incrementVote = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes)
+  }
+
   return (
     <div>
-      <Anecdote value={anecdotes[selected]}/>
+      <Anecdote text={anecdotes[selected]} votes={votes[selected]}/>
+      <Button onClick={incrementVote} text='vote'/>
       <Button onClick={getRandom} text='next anecdote'/>
     </div>
   )
