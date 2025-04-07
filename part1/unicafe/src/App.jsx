@@ -19,20 +19,25 @@ const Statistics = ({ values }) => {
     )
   }
   return (
-    <div>
-      <StatElement text='good' value={values.good}/>
-      <StatElement text='neutral' value={values.neutral}/>
-      <StatElement text='bad' value={values.bad}/>
-      <StatElement text='all' value={values.total}/>
-      <StatElement text='average' value={values.average}/>
-      <StatElement text='positive' value={values.percentPositive + ' %'}/>
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine text='good' value={values.good}/>
+        <StatisticLine text='neutral' value={values.neutral}/>
+        <StatisticLine text='bad' value={values.bad}/>
+        <StatisticLine text='all' value={values.total}/>
+        <StatisticLine text='average' value={values.average.toFixed(2)}/>
+        <StatisticLine text='positive' value={values.percentPositive.toFixed(1) + ' %'}/>
+      </tbody>
+    </table>
   )
 }
 
-const StatElement = ({ text, value }) => {
+const StatisticLine = ({ text, value }) => {
   return (
-    <p>{text} {value}</p>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
