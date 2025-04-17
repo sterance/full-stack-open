@@ -21,20 +21,31 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     
-    const nameExists = persons.some(person => person.name === newName);
+    const existingPerson = persons.find(person => person.name === newName);
+    const nameExists = Boolean(existingPerson);
+
+    const personObject = {
+      name: newName,
+      number: newNumber,
+    }
 
     if (nameExists) {
-      alert(`${newName} is already added to phonebook`);
+      personObject.id = existingPerson.id
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(personObject.id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === personObject.id ? returnedPerson : person));
+            console.log(`Successfully updated person with id ${personObject.id} and updated state.`);
+          })
+       }
     } else {
-      const personObject = {
-        name: newName,
-        number: newNumber,
-        id: String(persons.length + 1)
-      }
+      personObject.id = String(persons.length + 1)
       personService
         .create(personObject)
         .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
+          setPersons(persons.concat(returnedPerson));
+          console.log(`Successfully created person with id ${personObject.id} and updated state.`);
         })
     }
     setNewName('')
