@@ -41,6 +41,22 @@ const App = () => {
     setNewNumber('')
   }
 
+  const deletePerson = id => {
+    const personToDelete = persons.find(p => p.id === id);
+
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id));
+          console.log(`Successfully deleted person with id ${id} and updated state.`);
+        })
+        .catch(error => {
+          console.error(`Failed to delete person with id ${id} on server:`, error);
+        })
+    } 
+  }
+
   const personsToShow = persons.filter(person =>
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -67,9 +83,13 @@ const App = () => {
         newName={newName}
         handleNewNameChange={handleNewNameChange}
         newNumber={newNumber}
-        handleNewNumberChange={handleNewNumberChange}/>
+        handleNewNumberChange={handleNewNumberChange}
+      />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow}/>
+      <Persons
+        personsToShow={personsToShow}
+        onDeleteClick={deletePerson}
+      />
     </div>
   )
 }
