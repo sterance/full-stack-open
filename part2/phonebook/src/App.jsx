@@ -6,11 +6,11 @@ import personService from'./services/persons'
 import './index.css'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [searchTerm, setSearchTerm] = useState('')
-  const [notification, setNotification] = useState(null)
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notification, setNotification] = useState({ message: null, type: null });
 
   useEffect(() => {
     personService
@@ -38,14 +38,28 @@ const App = () => {
           .update(personObject.id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id === personObject.id ? returnedPerson : person));
-            setNotification(
-              `Updated ${personObject.name}`
-            )
+            setNotification({
+              message: `Updated ${personObject.name}`,
+              type: 'success'
+          })
             setTimeout(() => {
-              setNotification(null)
+              setNotification({ message: null, type: null })
             }, 5000)
             console.log(`Successfully updated person with id ${personObject.id} and updated state.`);
           })
+          .catch(error => {
+            setNotification({
+              message: `Information of ${personObject.name} has already been removed from the server`,
+              type: 'error'
+            })
+            console.log(error);
+            setTimeout(() => {
+              setNotification({ message: null, type: null })
+            }, 5000)
+            setPersons(persons.filter(person => person.id !== personObject.id))
+          }
+
+          )
        }
     } else {
       personObject.id = String(persons.length + 1)
@@ -53,11 +67,12 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson));
-          setNotification(
-            `Added ${personObject.name}`
-          )
+          setNotification({
+            message: `Added ${personObject.name}`,
+            type: 'success'
+          })
           setTimeout(() => {
-            setNotification(null)
+            setNotification({ message: null, type: null })
           }, 5000)
           console.log(`Successfully created person with id ${personObject.id} and updated state.`);
         })
@@ -74,11 +89,12 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id));
-          setNotification(
-            `Deleted ${personToDelete.name}`
-          )
+          setNotification({
+            message: `Deleted ${personToDelete.name}`,
+            type: 'success'
+          })
           setTimeout(() => {
-            setNotification(null)
+            setNotification({ message: null, type: null })
           }, 5000)
           console.log(`Successfully deleted person with id ${id} and updated state.`);
         })
@@ -109,8 +125,12 @@ const App = () => {
       return null
     }
 
+    const notificationClassName = notification.type === 'error'
+      ? 'error'
+      : 'notification';
+
     return (
-      <div className='notification'>
+      <div className={notificationClassName}>
         {message}
       </div>
     )
@@ -118,7 +138,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification}/>
+      <Notification message={notification.message}/>
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange}/>
       <h3>Add New</h3>
       <PersonForm
