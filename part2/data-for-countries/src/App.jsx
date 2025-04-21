@@ -18,7 +18,6 @@ const App = () => {
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
-    {console.log(countriesToShow)}
   }
 
   const countriesToShow = countries.filter(country =>
@@ -29,7 +28,7 @@ const App = () => {
     <div>
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange}/>
       <SearchResults countriesToShow={countriesToShow} />
-      <Information />
+      <Information countriesToShow={countriesToShow} />
     </div>
   )
 }
