@@ -7,6 +7,7 @@ import countriesService from './services/countries'
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [detailsCountries, setDetailsCountries] = useState([]);
 
   useEffect(() => {
     countriesService
@@ -20,15 +21,35 @@ const App = () => {
     setSearchTerm(event.target.value);
   }
 
-  const searchResultCountries = countries.filter(country =>
+  const countriesForSearchResults = countries.filter(country =>
     country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleToggleDetailsVisibility = (countryToToggle) => {
+    const isSelected = detailsCountries.some(c => c.cca3 === countryToToggle.cca3);
+
+    if (isSelected) {
+      setDetailsCountries(
+        detailsCountries.filter(c => c.cca3 !== countryToToggle.cca3)
+      );
+    } else {
+      setDetailsCountries([...detailsCountries, countryToToggle]);
+    }
+  };
+
+  const countriesForInformation = countriesForSearchResults.length === 1
+    ? countriesForSearchResults
+    : detailsCountries;
 
   return (
     <div>
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange}/>
-      <SearchResults countriesToShow={searchResultCountries} />
-      <Information countriesToShow={searchResultCountries} />
+      <SearchResults
+        countriesToShow={countriesForSearchResults}
+        selectedCountries={detailsCountries}
+        onShowToggle={handleToggleDetailsVisibility}
+      />
+      <Information countriesToDisplay={countriesForInformation} />
     </div>
   )
 }

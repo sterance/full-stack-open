@@ -1,4 +1,4 @@
-const SearchResults = ({countriesToShow}) => {
+const SearchResults = ({ countriesToShow, selectedCountries, onShowToggle }) => {
     if (countriesToShow.length < 1) {
         return (
             <div>No matches found!</div>
@@ -17,11 +17,19 @@ const SearchResults = ({countriesToShow}) => {
 
     return (
         <div>
-            {countriesToShow.map((country) => (
-                <div key={country.cca3}>{country.name.common}</div>
-            ))}
+          {countriesToShow.map((country) => {const isSelected = selectedCountries.some(c => c.cca3 === country.cca3);
+          
+            return (
+              <div key={country.cca3}>
+                {country.name.common}{' '}
+                <button onClick={() => onShowToggle(country)}>
+                  {isSelected ? 'hide' : 'show'}
+                </button>
+              </div>
+            );
+          })}
         </div>
-    )
+      );
 }
 
 export default SearchResults
