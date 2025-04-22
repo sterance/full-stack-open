@@ -20,15 +20,15 @@ const App = () => {
     setSearchTerm(event.target.value);
   }
 
-  const countriesToShow = countries.filter(country =>
+  const searchResultCountries = countries.filter(country =>
     country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div>
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange}/>
-      <SearchResults countriesToShow={countriesToShow} />
-      <Information countriesToShow={countriesToShow} />
+      <SearchResults countriesToShow={searchResultCountries} />
+      <Information countriesToShow={searchResultCountries} />
     </div>
   )
 }
