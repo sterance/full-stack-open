@@ -24,15 +24,26 @@ let persons = [
     }
 ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+
+function requestTime(req, res, next) {
+    req.receivedAt = new Date();
+    next();
+}
+app.use(requestTime);
+
+app.get('/api/persons', (req, res) => {
+    res.json(persons)
 })
 
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
-})
+app.get('/info', (req, res) => {
+    const formattedTime = req.receivedAt.toString();
+    res.send(`
+        <div>Phonebook has info for ${persons.length} people</div>
+        <div>${formattedTime}</div>
+    `);
+});
 
 const PORT = 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })
