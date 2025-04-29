@@ -32,15 +32,33 @@ function requestTime(req, res, next) {
 app.use(requestTime);
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+  res.json(persons)
+})
+
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id
+  const person = persons.find(person => person.id === id)
+
+  if (person) {
+    res.json(person)
+  } else {
+    res.status(404).end()
+  }
 })
 
 app.get('/info', (req, res) => {
-    const formattedTime = req.receivedAt.toString();
-    res.send(`
-        <div>Phonebook has info for ${persons.length} people</div>
-        <div>${formattedTime}</div>
-    `);
+  const formattedTime = req.receivedAt.toString();
+  res.send(`
+    <div>Phonebook has info for ${persons.length} people</div>
+    <div>${formattedTime}</div>
+  `);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+  const id = req.params.id
+  persons = persons.filter(person => person.id !== id)
+
+  res.status(204).end()
 });
 
 const PORT = 3001
