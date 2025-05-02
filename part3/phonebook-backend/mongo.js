@@ -90,6 +90,9 @@ switch (true) {
     case args.length === 5:
         addPerson();
         break;
+    case args.length > 5:
+        badArgs();
+        process.exit(1);
 }
 
 
